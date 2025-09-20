@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="icon" href="favicon_v2.png" type="image/png">
+  <meta charset="UTF-8">
+  <title>🤚Hand✋</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #ffccf3; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #frame {
+      width: 80vw;
+      aspect-ratio: 16 / 9;
+      background: #A0E0FF; 
+      position: relative;
+      overflow: hidden;
+      cursor: pointer; 
+    }
+
+    img.hand {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    img.fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover; 
+      z-index: 999;
+    }
+
+    .mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;     }
+#writeBtn {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);   font-size: 3rem;
+  font-weight: bold;
+  color: rgba(0,0,0,0.8);
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+  background: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  cursor: pointer;
+  z-index: 10000; 
+  opacity: 0;
+  transition: none;
+}
+#writeBtn.show {
+  opacity: 1;
+}
+
+  </style>
+</head>
+<body>
+  <div id="frame"></div>
+  <audio id="sound" src="hand.flac"></audio>
+  <div id="writeBtn">WRITE</div>
+
+
+  <script>
+    
+const frame = document.getElementById("frame");
+    const sound = document.getElementById("sound");
+
+    let current = 1;
+    const totalImages = 18;
+
+document.addEventListener("click", () => {
+  if (current > totalImages) return;
+
+  if (current === 17 || current === 18) {
+    
+    const img = document.createElement("img");
+    img.src = `hand${current}.png`;
+    img.classList.add("hand", "fullscreen");
+    document.body.appendChild(img);
+
+    if (current === 18) {
+      sound.play();
+      writeBtn.classList.add("show");     }
+
+  } else {
+    // 枠内画像
+    const containers = frame.querySelectorAll("div");
+    containers.forEach(c => {
+      if (!c.querySelector(".mask")) {
+        const mask = document.createElement("div");
+        mask.classList.add("mask");
+        mask.style.backgroundColor = "rgba(200,230,255,0.45)";
+        c.appendChild(mask);
+      }
+    });
+
+    const container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.top = "0";
+    container.style.left = "0";
+    container.style.width = "100%";
+    container.style.height = "100%";
+
+    const img = document.createElement("img");
+    img.src = `hand${current}.png`;
+    img.classList.add("hand");
+
+    container.appendChild(img);
+    frame.appendChild(container);
+  }
+
+  current++;
+});
+const writeBtn = document.getElementById("writeBtn");
+
+if (current === 18) {
+  sound.play();
+  
+  
+  writeBtn.classList.add("show");
+}
+
+writeBtn.addEventListener("click", () => {
+  window.location.href = "../note/note.html"; });
+
+  </script>
+</body>
+</html>
